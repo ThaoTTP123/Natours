@@ -7,15 +7,21 @@ const {
   resetPassword,
   protect,
   updatePassword,
+  restrictTo,
 } = require('../controllers/authController');
 const router = express.Router();
 router.post('/signup', signup);
 router.post('/login', login);
 router.post('/forgot-password', forgotPassword);
 router.patch('/reset-password/:token', resetPassword);
-router.patch('/change-password/', protect, updatePassword);
-router.patch('/update-me', protect, userController.updateMe);
-router.delete('/delete-me', protect, userController.deleteMe);
+// Protect All From This Point
+router.use(protect);
+router.patch('/change-password/', updatePassword);
+router.get('/me', userController.getMe, userController.getUserById);
+router.patch('/update-me', userController.updateMe);
+router.delete('/delete-me', userController.deleteMe);
+// Restrict To ADMIN Only
+router.use(restrictTo('admin'));
 router
   .route('/')
   .get(userController.getAllUsers)
