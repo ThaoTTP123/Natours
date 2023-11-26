@@ -1,17 +1,28 @@
+const { htmlToText } = require('html-to-text');
 const nodemailer = require('nodemailer');
+const pug = require('pug');
+const fs = require('fs');
+const path = require('path');
 module.exports = class Email {
-  constructor() {
+  constructor(user, url) {
     this.to = user.email;
     this.firstName = user.name.split(' ')[0];
     this.url = url;
-    rhis.from = `ThaoTTP ${process.env.EMAIL_FROM}`;
+    this.from = `ThaoTTP ${process.env.EMAIL_FROM}`;
   }
-  createTransport() {
+  newTransport() {
     if (process.env.NODE_ENV === 'production') {
-      return 1;
+      return nodemailer.createTransport({
+        service: 'gmail',
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
+        auth: {
+          user: process.env.SMTP_USERNAME,
+          pass: process.env.SMTP_PASSWORD,
+        },
+      });
     }
     return nodemailer.createTransport({
-      service: 'gmail',
       host: process.env.EMAIL_HOST,
       port: process.env.EMAIL_PORT,
       auth: {
@@ -20,18 +31,36 @@ module.exports = class Email {
       },
     });
   }
-  send(template, ubject) {}
-  sendWelcome() {
-    this.send('welcome', 'Welcome to the Natours family');
+  async send(template, subject) {
+    const templatePath = path.resolve(
+      __dirname,
+      '../dev-data/templates',
+      `${template}.pug`
+    );
+    const html = fs.readFileSync(templatePath, 'utf-8');
+    const compiledFunction = pug.compile(html);
+    const replacedHtml = compiledFunction({
+      firstName: this.firstName,
+      url: this.url,
+      subject,
+    });
+    const mailOptions = {
+      from: this.from,
+      to: this.to,
+      subject,
+      html: replacedHtml,
+      // html
+      text: htmlToText(replacedHtml),
+    };
+    await this.newTransport().sendMail(mailOptions);
   }
-};
-const sendEmail = async (options) => {
-  const mailOptions = {
-    from: 'ThaoTTP <hello@jonas.io>',
-    to: options.email,
-    subject: options.subject,
-    text: options.message,
-    // html
-  };
-  await transporter.sendMail(mailOptions);
+  async sendWelcome() {
+    await this.send('emailTemplate', 'Welcome to the Natours family');
+  }
+  async sendResetPassword() {
+    await this.send(
+      'passwordResetTemplate',
+      'Your password reset token (valid for only 10 minutes)'
+    );
+  }
 };
