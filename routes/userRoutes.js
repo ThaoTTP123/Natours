@@ -18,7 +18,12 @@ router.patch('/reset-password/:token', resetPassword);
 router.use(protect);
 router.patch('/change-password/', updatePassword);
 router.get('/me', userController.getMe, userController.getUserById);
-router.patch('/update-me', userController.updateMe);
+router.patch(
+  '/update-me',
+  userController.uploadUserPhoto,
+  userController.resizeUserPhoto,
+  userController.updateMe
+);
 router.delete('/delete-me', userController.deleteMe);
 // Restrict To ADMIN Only
 router.use(restrictTo('admin'));
