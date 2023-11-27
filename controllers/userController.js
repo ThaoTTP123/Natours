@@ -8,7 +8,7 @@ const {
   factoryUpdateOne,
   factoryGetOne,
   factoryGetAll,
-} = require('./handlerFActory');
+} = require('./handlerFactory');
 // const multerStorage = multer.diskStorage({
 //   destination: (req, file, cb) => {
 //     cb(null, 'public/img/users');

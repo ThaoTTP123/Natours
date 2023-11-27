@@ -9,7 +9,7 @@ const {
   factoryGetOne,
   factoryGetAll,
   factoryUpdateOne,
-} = require('./handlerFActory');
+} = require('./handlerFactory');
 const multerStorage = multer.memoryStorage();
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image')) {
