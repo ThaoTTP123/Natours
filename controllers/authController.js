@@ -89,6 +89,11 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
       message: 'User is already logged in!',
     });
   }
+  return res.status(400).json({
+    status: 'fail',
+    loggedIn: false,
+    message: "User haven't logged in!",
+  });
 });
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
