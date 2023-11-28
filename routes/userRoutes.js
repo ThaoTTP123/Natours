@@ -9,10 +9,12 @@ const {
   updatePassword,
   restrictTo,
   isLoggedIn,
+  logout,
 } = require('../controllers/authController');
 const router = express.Router();
 router.post('/signup', signup);
 router.post('/login', login);
+router.get('/logout', logout);
 router.get('/is-logged-in', isLoggedIn);
 router.post('/forgot-password', forgotPassword);
 router.patch('/reset-password/:token', resetPassword);
