@@ -25,9 +25,7 @@ app.get('/ip', (request, response) => response.send(request.ip));
 // }))
 
 app.use(
-  cors({
-    origin: 'https://natours-api-com.onrender.com',
-  })
+  cors()
 );
 app.use(express.static(`${__dirname}/public`));
 app.use(helmet());
