@@ -16,24 +16,14 @@ const bookingRouter = require('./routes/bookingRoutes');
 const errorController = require('./controllers/errorController');
 const app = express();
 // 1) MIDDLEWARES
-app.set('trust proxy', 3);
-app.get('/ip', (request, response) => response.send(request.ip));
+app.set('trust proxy');
 // Access-Control-Allow-Origin *
 // api.natours.com, front-end natours.com
-<<<<<<< HEAD
-app.use(
-  cors({
-    origin: 'https://natours-api-com.onrender.com',
-  })
-=======
 // app.use(cors({
 //   origin: 'https://www.natours.com'
 // }))
 
-app.use(
-  cors()
->>>>>>> cf8e56e8c070a2bd782074320f6c0f548a04bad3
-);
+app.use(cors());
 app.use(express.static(`${__dirname}/public`));
 app.use(helmet());
 if (process.env.NODE_ENV === 'development') {
