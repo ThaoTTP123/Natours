@@ -20,11 +20,11 @@ app.set('trust proxy', 3);
 app.get('/ip', (request, response) => response.send(request.ip));
 // Access-Control-Allow-Origin *
 // api.natours.com, front-end natours.com
-// app.use(cors({
-//   origin: 'https://www.natours.com'
-// }))
-
-app.options('*', cors());
+app.use(
+  cors({
+    origin: 'https://natours-api-com.onrender.com',
+  })
+);
 app.use(express.static(`${__dirname}/public`));
 app.use(helmet());
 if (process.env.NODE_ENV === 'development') {
