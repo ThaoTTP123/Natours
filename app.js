@@ -16,7 +16,7 @@ const bookingRouter = require('./routes/bookingRoutes');
 const errorController = require('./controllers/errorController');
 const app = express();
 // 1) MIDDLEWARES
-app.set('trust proxy');
+app.set('trust proxy',3);
 // Access-Control-Allow-Origin *
 // api.natours.com, front-end natours.com
 // app.use(cors({
