@@ -23,7 +23,7 @@ app.set('trust proxy',3);
 //   origin: 'https://www.natours.com'
 // }))
 
-app.use(cors({ credentials: true, origin: "http://localhost:5173"}));
+app.use(cors({ credentials: true, origin: ['http://localhost:5173','https://natours-api-com.onrender.com']}));
 app.use(express.static(`${__dirname}/public`));
 app.use(helmet());
 if (process.env.NODE_ENV === 'development') {
