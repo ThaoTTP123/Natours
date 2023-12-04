@@ -10,6 +10,7 @@ const {
   factoryGetAll,
   factoryUpdateOne,
 } = require('./handlerFactory');
+const Booking = require('../models/bookingModel');
 const multerStorage = multer.memoryStorage();
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image')) {
@@ -54,7 +55,19 @@ exports.aliasTopTours = (req, res, next) => {
   req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
   next();
 };
+exports.getMyTours = catchAsync(async (req, res, next) => {
+  // 1) Find all bookings
+  const bookings = await Booking.find({ user: req.user.id });
 
+  // 2) Find tours with the returned IDs
+  const tourIDs = bookings.map((el) => el.tour);
+  const tours = await Tour.find({ _id: { $in: tourIDs } });
+
+  res.status(200).render('overview', {
+    status: 'succes',
+    tours,
+  });
+});
 exports.getAllTours = factoryGetAll(Tour);
 exports.createNewTour = factoryCreateOne(Tour, { path: 'reviews' });
 exports.getTourById = factoryGetOne(Tour, 'reviews');

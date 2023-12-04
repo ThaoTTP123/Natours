@@ -55,7 +55,7 @@ exports.factoryGetOne = (Model, popOptions) =>
     }
     res.status(200).json({
       status: 'success',
-      data: { doc },
+      doc,
     });
   });
 exports.factoryGetAll = (Model) =>
@@ -63,6 +63,10 @@ exports.factoryGetAll = (Model) =>
     // For nested route
     let filter = {};
     if (req.params.tourId) filter = { tour: req.params.tourId };
+    const { length } = await new APIFeatures(
+      Model.find(filter),
+      req.query
+    ).filter().query;
     const features = new APIFeatures(Model.find(filter), req.query)
       .filter()
       .sort()
@@ -72,8 +76,7 @@ exports.factoryGetAll = (Model) =>
     res.status(200).json({
       status: 'success',
       results: doc.length,
-      data: {
-        doc,
-      },
+      total: length,
+      doc,
     });
   });

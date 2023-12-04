@@ -17,6 +17,7 @@ const createSendToken = (user, statusCode, res) => {
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
+    sameSite: 'None',
   };
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
   res.cookie('jwt', token, cookieOptions);
@@ -24,15 +25,12 @@ const createSendToken = (user, statusCode, res) => {
   res.status(statusCode).json({
     status: 'success',
     token,
-    data: {
-      user,
-    },
+    user,
   });
 };
 exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create(req.body);
   const url = `${req.protocol}://${req.get('host')}/me`;
-  console.log(url);
   await new Email(newUser, url).sendWelcome();
   createSendToken(newUser, 201, res);
 });
@@ -51,6 +49,8 @@ exports.logout = (req, res) => {
   res.cookie('jwt', 'logout', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
+    sameSite: 'None',
+    secure: true,
   });
   res.status(200).json({ status: 'success' });
 };
@@ -86,6 +86,7 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
       status: 'success',
       loggedIn: true,
       user: currentUser,
+      token: req.cookies.jwt,
       message: 'User is already logged in!',
     });
   }
