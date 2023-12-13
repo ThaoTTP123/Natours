@@ -12,7 +12,13 @@ const router = express.Router({ mergeParams: true });
 router.use(protect);
 router.get('/checkout-session/:tourId', getCheckoutSession);
 
-router.use(restrictTo('admin', 'lead-guide'));
-router.route('/').get(getAllBookings).post(createBooking);
-router.route('/:id').get(getBooking).patch(updateBooking).delete(deleteBooking);
+router
+  .route('/')
+  .get(restrictTo('admin', 'lead-guide'), getAllBookings)
+  .post(createBooking);
+router
+  .route('/:id')
+  .get(getBooking)
+  .patch(restrictTo('admin', 'lead-guide'), updateBooking)
+  .delete(restrictTo('admin', 'lead-guide'), deleteBooking);
 module.exports = router;

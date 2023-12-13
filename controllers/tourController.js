@@ -57,13 +57,13 @@ exports.aliasTopTours = (req, res, next) => {
 };
 exports.getMyTours = catchAsync(async (req, res, next) => {
   // 1) Find all bookings
+  console.log(req.user.id);
   const bookings = await Booking.find({ user: req.user.id });
-
+  if (!bookings) console.log('aaaaaaaa');
   // 2) Find tours with the returned IDs
   const tourIDs = bookings.map((el) => el.tour);
   const tours = await Tour.find({ _id: { $in: tourIDs } });
-
-  res.status(200).render('overview', {
+  res.status(200).json({
     status: 'succes',
     tours,
   });
