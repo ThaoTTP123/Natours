@@ -10,7 +10,7 @@ const {
   factoryDeleteOne,
 } = require('./handlerFactory');
 const User = require('../models/userModel');
-const success_url = 'http://localhost:5173/';
+const success_url = 'http://localhost:5173/history';
 const cancel_url = 'http://localhost:5173/';
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   // 1) Get the currently booked tour
